@@ -4,6 +4,8 @@ This doc is using the `material` for `mkdocs`, which turns markdown files into a
 
 **You should have `mkdocs` installed on your terminal first.**
 
+**Do not edit on `gh-pages` branch, this is updated by github action automatically.**
+
 To add a new seperate page of documentation, you need to
 
 1. add a new `.md` markdown file to the `docs/` directory
