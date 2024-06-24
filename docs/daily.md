@@ -1,5 +1,14 @@
 # Daily Progress Log
 
+## Mon 6/24/2024
+**Summary**: Migrated `glibc` `wasmtime` `lind-wasm-docs` `lind-wasm-tests` from `yizhuoliang` to `Lind-project` org, note that wasm adapted rustposix is still on `yzhang71`'s fork, the `3i-dev` branch.
+
+Downside of git submodules is keep tracking of branches seperately. Currently, the latest branches are:
+
+- `glibc` is on `syscall-retrun`, yes, ret"run", a typo
+- `wasmtime` is on `add-lind`
+- tests, and docs are using `main`
+
 ## Wed 6/19/2024
 **Summary**: So today we implemented `brk`/`sbrk` in glibc (userspace), by over allocating to page-aligned address and exposing a “psudo-break” to the caller. Now malloc is fully functional for small chunks that uses sbrk!
 
