@@ -10,6 +10,7 @@ nav:
     - understandTls.md
   - Building WASM glibc: buildGlibcWASM.md
   - Compiling C to WASM: wasmCompile.md
+  - Compiling Wasmtime from Source: compile-wasmtime.md
   - Debugging WASM module with Wasmtime: wasmtime-debug.md
   - How to add docs: writeDoc.md
   - Team: team.md
