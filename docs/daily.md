@@ -4,7 +4,7 @@
 1. Give Runbin access to server, and let him play around
 2. Add document to compile wasmtime from source code
 3. Try to run the whole pipline, and fix some documentation 
-4. Continue working on threading part
+4. Continue working on threading part, now trying to compile pthread_create.c and remove the asm code
 
 ## Mon 6/24/2024
 **Summary**: Migrated `glibc` `wasmtime` `lind-wasm-docs` `lind-wasm-tests` from `yizhuoliang` to `Lind-project` org, note that wasm adapted rustposix is still on `yzhang71`'s fork, the `3i-dev` branch.
