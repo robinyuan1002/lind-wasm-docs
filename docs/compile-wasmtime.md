@@ -15,6 +15,8 @@ Install the Rust toolchain, which includes `rustup`, `cargo`, `rustc`, etc. You 
 The `wasmtime-fuzzing` crate transitively depends on `bindgen`, which requires `libclang` to be installed on your system. If you want to work on Wasmtime's fuzzing infrastructure, you'll need `libclang`. Details on how to get `libclang` and make it available for `bindgen` are [here](https://rust-lang.github.io/rust-bindgen/requirements.html).
 
 ## Building the Wasmtime CLI
+Change the path in lind-wasm/wasmtime/crates/rustposix/src/build.rs "cargo:rustc-link-search=native=" to the location of "librustposix.so"
+
 To make an unoptimized, debug build of the Wasmtime CLI tool, go to the root of the repository and run:
 ```sh
 cargo build
