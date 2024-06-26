@@ -1,9 +1,34 @@
 # Daily Progress Log
 
+## Wed 6/26/2024
+1. The build and run pipeline has been tested and works well
+2. To compile threading testcase, we are facing below errors:
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(gconv_dl.o): undefined symbol: __libc_dlopen_mode
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(gconv_dl.o): undefined symbol: __libc_dlsym
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(gconv_dl.o): undefined symbol: __libc_dlsym
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(gconv_dl.o): undefined symbol: __libc_dlsym
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(gconv_dl.o): undefined symbol: __libc_dlclose
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_mutex_unlock.o): undefined symbol: __lll_unlock_elision
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_create.o): undefined symbol: __libc_sigaction
+3. Add implementation to handle sigaction syscall in both rustposix and glibc
+
 ## Tue 6/25/2024
 1. Give Runbin access to server, and let him play around
 2. Add document to compile wasmtime from source code
-3. Try to run the whole pipline, and fix some documentation 
+3. Try to run the whole pipeline, and fix some documentation 
 4. Continue working on threading part, now trying to compile pthread_create.c and remove the asm code
 5. Now we have pthread_create.o generated
 
