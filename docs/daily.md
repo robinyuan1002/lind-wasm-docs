@@ -1,5 +1,24 @@
 # Daily Progress Log
 
+## Thu 6/27/2024
+1. Change the implementation of thread_self to wasi-libc version, which fixed errors:
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_join_common.o): undefined symbol: __wasilibc_pthread_self
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_join_common.o): undefined symbol: __wasilibc_pthread_self
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_join_common.o): undefined symbol: __wasilibc_pthread_self
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_join_common.o): undefined symbol: __wasilibc_pthread_self
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_join_common.o): undefined symbol: __wasilibc_pthread_self
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_join_common.o): undefined symbol: __wasilibc_pthread_self
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_join_common.o): undefined symbol: __wasilibc_pthread_self
+2. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(gconv_dl.o): undefined symbol: __libc_dlopen_mode
+Fixed above error by disabling the // args.caller_dlopen = RETURN_ADDRESS (0);
+3. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(dl-debug.o): undefined symbol: _r_debug_extended
+This error is fixed by converting dl-debug-symbols.S to dl-debug-symbols.c
+4. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(rtld_static_init.o): undefined symbol: __dlopen
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(rtld_static_init.o): undefined symbol: __dlsym
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(rtld_static_init.o): undefined symbol: __dlvsym
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(rtld_static_init.o): undefined symbol: __dlmopen
+Above error are fixed by #define RETURN_ADDRESS(nr) (NULL) in /glibc/include/libc-symbols.h
+
 ## Wed 6/26/2024
 1. The build and run pipeline has been tested and works well
 2. To compile threading testcase, we are facing below errors:
