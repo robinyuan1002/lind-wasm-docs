@@ -5,6 +5,8 @@
 Fix above error by changing int gscope_flag; to _Atomic int gscope_flag; in /glibc/sysdeps/i386/nptl/tls.h
 2. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
 Fix above error by adding implementation of unsigned char __clz_tab[] in /glibc/sysdeps/i386/mp_clz_tab.c
+3. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(stat64.o): undefined symbol: __fstatat64_time64
+This error is fixed by disabling fstatat64_time64_stat in /glibc/sysdeps/unix/sysv/linux/fstatat64.c for now
 
 ## Thu 6/27/2024
 1. Change the implementation of thread_self to wasi-libc version, which fixed errors:
