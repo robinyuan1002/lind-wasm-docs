@@ -1,5 +1,11 @@
 # Daily Progress Log
 
+## Fri 6/28/2024
+1. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(dl-reloc.o): undefined symbol: _dl_lookup_symbol_x 
+Fix above error by changing int gscope_flag; to _Atomic int gscope_flag; in /glibc/sysdeps/i386/nptl/tls.h
+2. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(ldbl2mpn.o): undefined symbol: __clz_tab
+Fix above error by adding implementation of unsigned char __clz_tab[] in /glibc/sysdeps/i386/mp_clz_tab.c
+
 ## Thu 6/27/2024
 1. Change the implementation of thread_self to wasi-libc version, which fixed errors:
 wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_join_common.o): undefined symbol: __wasilibc_pthread_self
