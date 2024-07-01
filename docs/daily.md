@@ -1,5 +1,11 @@
 # Daily Progress Log
 
+## Mon 7/01/2024
+1. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_create.o): undefined symbol: __futex_abstimed_wait_cancelable64
+This error is fixed by disabling INTERNAL_SYSCALL_CANCEL for futex_time64 in /glibc/nptl/futex-internal.c
+2. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_rwlock_rdlock.o): undefined symbol: __futex_abstimed_wait64
+This error is fixed by disabling INTERNAL_SYSCALL_CANCEL for futex (__futex_abstimed_wait_common32) in /glibc/nptl/futex-internal.c
+
 ## Fri 6/28/2024
 1. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(dl-reloc.o): undefined symbol: _dl_lookup_symbol_x 
 Fix above error by changing int gscope_flag; to _Atomic int gscope_flag; in /glibc/sysdeps/i386/nptl/tls.h
