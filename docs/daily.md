@@ -9,6 +9,9 @@ This error is fixed by disabling INTERNAL_SYSCALL_CANCEL for futex (__futex_abst
 This error is fixed by changing the implementation of __libc_open to return MAKE_SYSCALL(10, "syscall|open", (uint64_t) file, (uint64_t) oflag, (uint64_t) mode, NOTUSED, NOTUSED, NOTUSED); in /glibc/sysdeps/unix/sysv/linux/open.c
 4. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_mutex_unlock.o): undefined symbol: __lll_unlock_elision
 This error is fixed by disabling _xend() ''hardware unlock'' in /glibc/sysdeps/unix/sysv/linux/x86/elision-unlock.c
+5. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_mutex_lock.o): undefined symbol: __lll_lock_elision
+This error is fixed by disabling xbegin() /glibc/sysdeps/unix/sysv/linux/x86/elision-lock.c
+6. Now, both pthread and hello-world can be compiled successfully 
 
 ## Fri 6/28/2024
 1. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(dl-reloc.o): undefined symbol: _dl_lookup_symbol_x 
