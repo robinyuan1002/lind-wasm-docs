@@ -2,7 +2,7 @@
 
 ## Tue 7/02/2024
 1. The previous printf infinite loop error has been fixed by re-implementing BYTE_COPY_FWD and BYTE_COPY_BWD in c (/glibc/sysdeps/i386/memcopy.h)
-2. 
+2. Refined the implementation of memcpy; it now works properly.
 
 ## Mon 7/01/2024
 1. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(pthread_create.o): undefined symbol: __futex_abstimed_wait_cancelable64
