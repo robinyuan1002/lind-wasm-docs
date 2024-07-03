@@ -2,6 +2,7 @@
 
 ## Wed 7/03/2024
 1. Create and run simple vtable testcase
+2. Now printf (hello-world example) is fully functional. The problem with the vtables was due to the developers explicitly placing all libio vtables into the relro section in ELF. The solution is simple: we removed `attribute_relro` from /glibc/libio/vtables.c:92.
 
 ## Tue 7/02/2024
 1. The previous printf infinite loop error has been fixed by re-implementing BYTE_COPY_FWD and BYTE_COPY_BWD in c (/glibc/sysdeps/i386/memcopy.h)
