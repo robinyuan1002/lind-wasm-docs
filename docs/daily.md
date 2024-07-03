@@ -1,5 +1,8 @@
 # Daily Progress Log
 
+## Wed 7/03/2024
+1. Create and run simple vtable testcase
+
 ## Tue 7/02/2024
 1. The previous printf infinite loop error has been fixed by re-implementing BYTE_COPY_FWD and BYTE_COPY_BWD in c (/glibc/sysdeps/i386/memcopy.h)
 2. Refined the implementation of memcpy; it now works properly.
