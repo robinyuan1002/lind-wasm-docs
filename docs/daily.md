@@ -1,5 +1,8 @@
 # Daily Progress Log
 
+## Thu 7/04/2024
+1. Confirmed that pthread_create calls __pthread_create_2_1 in glibc.
+
 ## Wed 7/03/2024
 1. Create and run simple vtable testcase
 2. Now printf (hello-world example) is fully functional. The problem with the vtables was due to the developers explicitly placing all libio vtables into the relro section in ELF. The solution is simple: we removed `attribute_relro` from /glibc/libio/vtables.c:92.
