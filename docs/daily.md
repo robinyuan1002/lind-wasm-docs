@@ -2,6 +2,7 @@
 
 ## Thu 7/04/2024
 1. Confirmed that pthread_create calls __pthread_create_2_1 in glibc.
+2. Clean up the GitHub repo: the default branch is now main, and we created a separate branch wasm-libc-thread to work on thread-related tasks.
 
 ## Wed 7/03/2024
 1. Create and run simple vtable testcase
