@@ -56,7 +56,6 @@ For step four, we create a .sh file and write a config script in the file. We us
 
 ```
 nano runbin_yuan.sh
-
 ```
 before writing the script we need to install gcc-i686
 
