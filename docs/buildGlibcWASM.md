@@ -3,14 +3,68 @@
 I'd recommend reading this doc in its entirety before trying to compile.
 
 ## Prerequisites
+We need glibc from lind-wasm, if you did it already then ignore it
+[https://github.com/Lind-Project/lind-wasm.git](https://github.com/Lind-Project/lind-wasm.git)
+
 We need WASM compatible `clang` and `ar`, which can be built locally from `wasi-sdk`
 [https://github.com/WebAssembly/wasi-sdk](https://github.com/WebAssembly/wasi-sdk)
 
 Also strongly recommend to install `wasm-objdump` from the `wabt` toolkit
 [https://github.com/WebAssembly/wabt](https://github.com/WebAssembly/wabt)
 
+You need to have an access to the server, ask somebody to help you. Then you pull an image to docker and run it
+
+```
+docker pull ubuntu:22.04
+docker run -it ubuntu
+```
+
+If any error said "permission denied" then just add "sudo" at the front of the command line.
+
+If you want to edit file through terminal, try to search vim and study how to use it.
+
 ## Configure
-Firstly we should write and run a config script like this in the glibc root directory
+
+First we should install some apt essential
+
+```
+apt install build-essential
+```
+
+Second we need to compile wasm-sdk,before this find wasm-sdk "cd cd wasi-sdk" is an example
+
+```
+NINJA_FLAGS=-v make -j8 package
+```
+
+-j8 means we are using 8 core, you can change the number. B8t normal 8 core is enough.
+
+if terimal tells you, you don't have "make" or thing like that just use "apt-get install...". This is an example
+
+```
+apt-get install make
+```
+
+Third switch branch which is related with github. Find out which branch you are on currently and switch to branch "syscall-retrun" 
+
+```
+git branch -a
+git switch syscall-retrun 
+```
+
+For step four, we create a .sh file and write a config script in the file. We use "nano" to create file in the glibc root directory(glibc is in the lind-wasm directory) and you can change "runbin_yuan" into the filename you want
+
+```
+nano runbin_yuan.sh
+
+```
+before writing the script we need to install gcc-i686
+
+```
+apt install gcc-i686-linux-gnu g++-i686-linux-gnu
+```
+
+then we write the script like this
 
 ```
 #!/bin/bash
@@ -18,11 +72,12 @@ set -e
 BUILDDIR=build
 mkdir -p $BUILDDIR
 cd $BUILDDIR
-../configure --disable-werror --disable-hidden-plt --with-headers=/usr/i686-linux-gnu/include --prefix=/sysroot-coulson --host=i686-linux-gnu --build=i686-linux-gnu\
+../configure --disable-werror --disable-hidden-plt --with-headers=/usr/i686-linux-gnu/include --prefix=/home/lind-wasm/glibc/target --host=i686-linux-gnu --build=i686-linux-gnu\
     CFLAGS=" -O2 -g" \
-    CC="/wasi-sdk/build/wasi-sdk-22.0/bin/clang-18 --target=wasm32-unkown-wasi -v -Wno-int-conversion"
+    CC="/home/wasi-sdk/build/llvm/bin/clang-18 --target=wasm32-unkown-wasi -v -Wno-int-conversion"
 ```
-You must replace `CC` to the path to your `clang`. If you define `BUILDDIR=build`, then the compiled WASM object files will appear under `glibc/build`.
+
+You should replace `CC` to the path to your `clang`, this path should work but if not change this part (/home/wasi-sdk/build/llvm/bin/clang-18) into your own path. If you define `BUILDDIR=build`, then the compiled WASM object files will appear under `glibc/build`.
 Be aware that you should make sure this build directory is empty before running config script, so you need to `rm -rf build` before recompiling it.
 
 A crutial job of the configure script is deciding which sysdeps directories to use according to the `host` and `build` string.
@@ -42,8 +97,13 @@ The compiler flags we need:
 -  `-Wno-int-conversion`: we disable int conversion warnings, cuz all 32bit types as WASM function arguments, are eventually i32 anyway
 - `--target=wasm32-unkown-wasi`: this tells the compiler we want to compile to WASM
 
-After config succeed, you will see these in the `build` directory,
+Now the last step is to run the .sh file
+```
+sudo chmod +x runbin_yuan.sh 
+./runbin_yuan.sh
+```
 
+After config succeed, you will see these in the `build` directory,
 ```
 Makefile  bits  config.h  config.log  config.make  config.status
 ```
