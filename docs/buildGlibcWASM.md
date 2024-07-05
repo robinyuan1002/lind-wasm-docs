@@ -3,6 +3,14 @@
 I'd recommend reading this doc in its entirety before trying to compile.
 
 ## Prerequisites
+
+You need to have an access to the server, ask somebody to help you. Then you pull an image to docker and run it
+
+```
+docker pull ubuntu:22.04
+docker run -it ubuntu
+```
+
 We need glibc from lind-wasm, if you did it already then ignore it
 [https://github.com/Lind-Project/lind-wasm.git](https://github.com/Lind-Project/lind-wasm.git)
 
@@ -12,11 +20,9 @@ We need WASM compatible `clang` and `ar`, which can be built locally from `wasi-
 Also strongly recommend to install `wasm-objdump` from the `wabt` toolkit
 [https://github.com/WebAssembly/wabt](https://github.com/WebAssembly/wabt)
 
-You need to have an access to the server, ask somebody to help you. Then you pull an image to docker and run it
-
+if you want to download files from github to server use `git clone` and `recurse-submodules`deal with repositories that contain submodules
 ```
-docker pull ubuntu:22.04
-docker run -it ubuntu
+git clone --recurse-submodules
 ```
 
 If any error said "permission denied" then just add "sudo" at the front of the command line.
@@ -31,13 +37,14 @@ First we should install some apt essential
 apt install build-essential
 ```
 
-Second we need to compile wasm-sdk,before this find wasm-sdk "cd cd wasi-sdk" is an example
+Second we need to compile wasm-sdk. Before this we need to access to wasm-sdk, you need to replace `cd wasi-sdk` to what your need 
 
 ```
+cd wasi-sdk
 NINJA_FLAGS=-v make -j8 package
 ```
 
--j8 means we are using 8 core, you can change the number. B8t normal 8 core is enough.
+-j8 means we are using 8 core, you can change the number. But normally 8 core is enough.
 
 if terimal tells you, you don't have "make" or thing like that just use "apt-get install...". This is an example
 
@@ -45,11 +52,11 @@ if terimal tells you, you don't have "make" or thing like that just use "apt-get
 apt-get install make
 ```
 
-Third switch branch which is related with github. Find out which branch you are on currently and switch to branch "syscall-retrun" 
+Third switch branch which is related with github. Find out which branch you are on currently and switch to branch "main" 
 
 ```
 git branch -a
-git switch syscall-retrun 
+git switch main 
 ```
 
 For step four, we create a .sh file and write a config script in the file. We use "nano" to create file in the glibc root directory(glibc is in the lind-wasm directory) and you can change "runbin_yuan" into the filename you want
