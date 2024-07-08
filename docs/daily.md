@@ -2,6 +2,7 @@
 
 ## Mon 7/08/2024
 1. The issue has been identified. It was caused by int err = allocate_stack(iattr, &pd, &stackaddr, &stacksize);. The allocate_stack function returns a usable stack for a new thread either by allocating a new stack or reusing a cached stack of sufficient size. The ATTR parameter must be non-NULL and point to a valid pthread_attr. The PDP parameter must also be non-NULL.
+2. The problem with allocatestack.c not being compiled into an object file is due to code from allocatestack.c directly compiled into pthread_create.c. This is an unconventional method, but it seems like people use it anyway. It makes debugging harder, but I can debug it by adding print statements."
 
 ## Thu 7/04/2024
 1. Confirmed that pthread_create calls __pthread_create_2_1 in glibc.
