@@ -1,5 +1,8 @@
 # Daily Progress Log
 
+## Mon 7/08/2024
+1. The issue has been identified. It was caused by int err = allocate_stack(iattr, &pd, &stackaddr, &stacksize);. The allocate_stack function returns a usable stack for a new thread either by allocating a new stack or reusing a cached stack of sufficient size. The ATTR parameter must be non-NULL and point to a valid pthread_attr. The PDP parameter must also be non-NULL.
+
 ## Thu 7/04/2024
 1. Confirmed that pthread_create calls __pthread_create_2_1 in glibc.
 2. Clean up the GitHub repo: the default branch is now main, and we created a separate branch wasm-libc-thread to work on thread-related tasks.
