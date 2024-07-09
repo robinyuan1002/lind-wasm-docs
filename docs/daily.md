@@ -6,7 +6,18 @@
 assert (powerof2 (pagesize_m1 + 1));
 assert (TCB_ALIGNMENT >= STACK_ALIGN);
 ```
-2. 
+2. Next, we are getting error from:
+```
+/* Compute the size of the static TLS area based on data from the
+   dynamic loader.  */
+static inline size_t
+__nptl_tls_static_size_for_stack (void)
+{
+  return roundup (GLRO (dl_tls_static_size), GLRO (dl_tls_static_align));
+}
+```
+Thread 1 "wasmtime" received signal SIGFPE, Arithmetic exception.
+3. 
 
 ## Mon 7/08/2024
 1. The issue has been identified. It was caused by int err = allocate_stack(iattr, &pd, &stackaddr, &stacksize);. The allocate_stack function returns a usable stack for a new thread either by allocating a new stack or reusing a cached stack of sufficient size. The ATTR parameter must be non-NULL and point to a valid pthread_attr. The PDP parameter must also be non-NULL.
