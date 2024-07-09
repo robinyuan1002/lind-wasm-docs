@@ -17,7 +17,7 @@ __nptl_tls_static_size_for_stack (void)
 }
 ```
 Thread 1 "wasmtime" received signal SIGFPE, Arithmetic exception.
-3. 
+3. Since compiling glibc requires optimization, which makes debugging harder, I separately compiled `pthread_create.c` without optimization. This has made debugging more straightforward.
 
 ## Mon 7/08/2024
 1. The issue has been identified. It was caused by int err = allocate_stack(iattr, &pd, &stackaddr, &stacksize);. The allocate_stack function returns a usable stack for a new thread either by allocating a new stack or reusing a cached stack of sufficient size. The ATTR parameter must be non-NULL and point to a valid pthread_attr. The PDP parameter must also be non-NULL.
