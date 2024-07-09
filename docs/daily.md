@@ -1,5 +1,13 @@
 # Daily Progress Log
 
+## Tue 7/09/2024
+1. In the function allocate_stack in /glibc/nptl/allocatestack.c, the two assertions fail, so we have disabled them for now to continue compiling:
+```
+assert (powerof2 (pagesize_m1 + 1));
+assert (TCB_ALIGNMENT >= STACK_ALIGN);
+```
+2. 
+
 ## Mon 7/08/2024
 1. The issue has been identified. It was caused by int err = allocate_stack(iattr, &pd, &stackaddr, &stacksize);. The allocate_stack function returns a usable stack for a new thread either by allocating a new stack or reusing a cached stack of sufficient size. The ATTR parameter must be non-NULL and point to a valid pthread_attr. The PDP parameter must also be non-NULL.
 2. The problem with allocatestack.c not being compiled into an object file is due to code from allocatestack.c directly compiled into pthread_create.c. This is an unconventional method, but it seems like people use it anyway. It makes debugging harder, but I can debug it by adding print statements."
