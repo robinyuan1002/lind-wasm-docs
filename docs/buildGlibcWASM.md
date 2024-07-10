@@ -124,8 +124,20 @@ make install --keep-going
 In the build directory, usually we use `make --keep-going -j$(nproc)`. The first flag is to continue compiling after errors, we need this cuz there are too many errors now (mainly due to assembly about threading). The `-j` is important to speed it up, but also makes the compilation log interleaved. The compilation log is **VERY IMPORTANT**, which tells why a given c file failed to be compiled. So sometimes we don't want the `-j`. Also, we can copy the actual compiler command in the compile log. For such commands, if we want to compile a single C file, only the source file path need to be further specified. We can use this to test compiling a specific file.
 
 ## Generating WASM sysroot
-This procedure is specified in the `gen_sysroot.sh` script in our glibc repo. It's main job is to generate a WASM sysroot structre like
+This procedure is specified in the `gen_sysroot.sh` script in our glibc repo. It's main job is to generate a WASM sysroot structure like
 
+```
+sysroot/
+- include/
+  - wasm32-wasi/
+    - stdio.h
+    - ...other headers
+- lib/
+  - wasm32-wasi/
+    - crt1.o
+    - libc.a
+```
+This is the code for `gen_sysroot.sh`
 ```
 #!/bin/bash
 
