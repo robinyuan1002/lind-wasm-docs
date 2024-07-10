@@ -1,4 +1,4 @@
-##Setting environment
+## Setting environment
 
 ```
 apt update
@@ -11,14 +11,14 @@ rustup install nightly
 rustup default nightly
 ```
 
-##Clone git repo
+## Clone git repo
 
 ```
 cd home
 git clone https://github.com/Lind-Project/safeposix-rust.git
 ```
 
-##Build
+## Build
 
 ```
 cargo build
