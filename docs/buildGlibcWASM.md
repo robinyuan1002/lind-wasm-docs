@@ -115,6 +115,7 @@ Makefile  bits  config.h  config.log  config.make  config.status
 ```
 ## installing glibc
 Before we start compiling to object files we need to install the glibc we complied to the prefix in the .sh file. For example, mine will install into "target". This is the install command line we need to use
+
 ```
 make install --keep-going
 ```
@@ -124,7 +125,8 @@ make install --keep-going
 In the build directory, usually we use `make --keep-going -j$(nproc)`. The first flag is to continue compiling after errors, we need this cuz there are too many errors now (mainly due to assembly about threading). The `-j` is important to speed it up, but also makes the compilation log interleaved. The compilation log is **VERY IMPORTANT**, which tells why a given c file failed to be compiled. So sometimes we don't want the `-j`. Also, we can copy the actual compiler command in the compile log. For such commands, if we want to compile a single C file, only the source file path need to be further specified. We can use this to test compiling a specific file.
 
 ## Generating WASM sysroot
-This procedure is specified in the `gen_sysroot.sh` script in our glibc repo. It's main job is to generate a WASM sysroot structre like
+
+This is an example for `gen_sysroot.sh`
 
 ```
 #!/bin/bash
@@ -177,20 +179,6 @@ cp -r "$include_source_dir"/* "$sysroot_dir/include/wasm32-wasi/"
 # Copy the crt1.o file into the new sysroot lib directory
 cp "$crt1_source_path" "$sysroot_dir/lib/wasm32-wasi/"
 ```
-Note that the header files should be pre-generated using `make install`. The crt1.o should be pre-compiled from this simple C file (see the WASM compile doc as well). The main job of this script is to change "include_source_dir"(path to target file), "crt1_source_path"(path to crt1.o), "lind_syscall_path"(path to lind_syscall.o), and "Pack all found .o files into a single .a archive"(path to llvm-ar) into your own path. crt1.o and lind_syscall.o are in "lind_syscall" directory in glibc.
-
-After modifying all the path talked on the above, try to run gen_sysroot.sh and see if it works
-```
-./gen_sysroot.sh
-```
-
-```
-void _start() {
-    main();
-}
-void __wasm_call_dtors() {}
-void __wasi_proc_exit(unsigned int exit_code) {}
-```
 Here are some macros we need to twist:
 
 - `src_dir`: the glibc `build` directory that contains all the WASM object files
@@ -199,16 +187,24 @@ Here are some macros we need to twist:
 - `lind_syscall_path`: you also need to pre-compile `lind_syscall.o`, just like `crt1.o`, and the source file is under glibc/lind_syscall
 - `sysroot_dir`: path to generate the sysroot at
 - `output_archive`: the path to the generate the libc.a, should be align with `sysroot_dir`
+  
+Note that the header files should be pre-generated using `make install`. The crt1.o should be pre-compiled from this simple C file (see the WASM compile doc as well). The main job of this script is to change `include_source_dir`(path to target file), `crt1_source_path`(path to crt1.o), `lind_syscall_path`(path to lind_syscall.o), and `Pack all found .o files into a single .a archive`(path to llvm-ar) into your own path. crt1.o and lind_syscall.o are in `lind_syscall` directory in glibc.
 
- 
+After modifying all the path talked on the above, try to run `gen_sysroot.sh` and see if it works
+```
+./gen_sysroot.sh
+```
 
-## Running only the pre-processor
-
-The pre-processing stage of the compiler expland all `#include` and all macros. Because recursive macros are so prevalent in glibc, sometimes you want to see the actual source file after epxansions, then you want to use the `-E` option of `clang`.
-
-The easiest way is to copy the compiler command from the compile log and add a `-E`. If you want to run pre-prosessor on ALL files, then run the configure script again, but before compiling, add `-E` to `config.make` right after
+This procedure is specified in the `gen_sysroot.sh` script in our glibc repo. It's main job is to generate a WASM sysroot structre like
 
 ```
-# Build tools.
-CC = /wasi-sdk/build/wasi-sdk-22.0/bin/clang-18 [ADD HERE!]
+sysroot/
+- include/
+  - wasm32-wasi/
+    - stdio.h
+    - ...other headers
+- lib/
+  - wasm32-wasi/
+    - crt1.o
+    - libc.a
 ```
