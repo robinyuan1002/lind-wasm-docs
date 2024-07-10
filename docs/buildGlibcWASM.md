@@ -113,7 +113,7 @@ After config succeed, you will see these in the `build` directory,
 ```
 Makefile  bits  config.h  config.log  config.make  config.status
 ```
-## installing glibc
+## Installing glibc
 Before we start compiling to object files we need to install the glibc we complied to the prefix in the .sh file. For example, mine will install into "target". This is the install command line we need to use
 
 ```
