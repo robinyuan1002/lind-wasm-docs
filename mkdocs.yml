@@ -9,7 +9,7 @@ nav:
   - WASM Knowledge:
     - understandTls.md
   - Building WASM glibc: buildGlibcWASM.md
-  - Compile safeposix-rust: Compile safeposix-rust.md
+  - compile-safeposix-rust: Compile safeposix-rust.md
   - Compiling C to WASM: wasmCompile.md
   - Compiling Wasmtime from Source: compile-wasmtime.md
   - Debugging WASM module with Wasmtime: wasmtime-debug.md
