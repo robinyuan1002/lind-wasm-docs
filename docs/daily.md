@@ -1,5 +1,10 @@
 # Daily Progress Log
 
+## Wed 7/10/2024
+1. Helped Runbin with the document and merged several of his PRs.
+2. We are getting an error from `__nptl_tls_static_size_for_stack` because the variables `dl_tls_static_size` and `dl_tls_static_align` are not initialized.
+3. I have confirmed that `init_static_tls` is not being called. Nick and Professor Cappos raised a great point that this function should be called before the `main` function, possibly in the `crt1.o` file.
+
 ## Tue 7/09/2024
 1. In the function allocate_stack in /glibc/nptl/allocatestack.c, the two assertions fail, so we have disabled them for now to continue compiling:
 ```
