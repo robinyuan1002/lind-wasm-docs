@@ -52,17 +52,17 @@ if terimal tells you, you don't have "make" or thing like that just use "apt-get
 apt-get install make
 ```
 
-Third switch branch which is related with github. Find out which branch you are on currently and switch to branch "main" 
+Third switch branch which is related with github(cd to lind-wasm/glicb). Find out which branch you are on currently and switch to branch "main" 
 
 ```
 git branch -a
 git switch main 
 ```
 
-For step four, we create a .sh file and write a config script in the file. We use "nano" to create file in the glibc root directory(glibc is in the lind-wasm directory) and you can change "runbin_yuan" into the filename you want
+For step four, we create a .sh file and write a config script in the file. We use `nano` to create file in the glibc root directory(glibc is in the lind-wasm directory) and you can change `anyname` into the filename you want
 
 ```
-nano runbin_yuan.sh
+nano anyname.sh
 ```
 before writing the script we need to install gcc-i686
 
@@ -105,13 +105,18 @@ The compiler flags we need:
 
 Now the last step is to run the .sh file
 ```
-sudo chmod +x runbin_yuan.sh 
-./runbin_yuan.sh
+sudo chmod +x anyname.sh 
+./anyname.sh
 ```
 
 After config succeed, you will see these in the `build` directory,
 ```
 Makefile  bits  config.h  config.log  config.make  config.status
+```
+## installing glibc
+Before we start compiling to object files we need to install the glibc we complied to the prefix in the .sh file. For example, mine will install into "target". This is the install command line we need to use
+```
+make install --keep-going
 ```
 
 ## Compiling to object files
@@ -122,17 +127,62 @@ In the build directory, usually we use `make --keep-going -j$(nproc)`. The first
 This procedure is specified in the `gen_sysroot.sh` script in our glibc repo. It's main job is to generate a WASM sysroot structre like
 
 ```
-sysroot/
-- include/
-  - wasm32-wasi/
-    - stdio.h
-    - ...other headers
-- lib/
-  - wasm32-wasi/
-    - crt1.o
-    - libc.a
+#!/bin/bash
+
+# Define the source directory for object files (change ./build to your desired path)
+src_dir="./build"
+
+# Define paths for copying additional resources
+include_source_dir="/home/lind-wasm/glibc/target/include"
+crt1_source_path="/home/lind-wasm/glibc/lind_syscall/crt1.o"
+lind_syscall_path="/home/lind-wasm/glibc/lind_syscall/lind_syscall.o" # Path to the lind_syscall.o file
+
+# Define the output archive and sysroot directory
+output_archive="sysroot/lib/wasm32-wasi/libc.a"
+sysroot_dir="sysroot"
+
+# First, remove the existing sysroot directory to start cleanly
+rm -rf "$sysroot_dir"
+
+# Find all .o files recursively in the source directory, ignoring stamp.o
+object_files=$(find "$src_dir" -type f -name "*.o" ! \( -name "stamp.o" -o -name "argp-pvh.o" -o -name "repertoire.o" \))
+
+# Add the lind_syscall.o file to the list of object files
+object_files="$object_files $lind_syscall_path"
+
+# Check if object files were found
+if [ -z "$object_files" ]; then
+  echo "No suitable .o files found in '$src_dir'."
+  exit 1
+fi
+
+# Create the sysroot directory structure
+mkdir -p "$sysroot_dir/include/wasm32-wasi" "$sysroot_dir/lib/wasm32-wasi"
+
+# Pack all found .o files into a single .a archive
+/home/wasi-sdk/build/llvm/bin/llvm-ar rcs "$output_archive" $object_files
+
+# Check if llvm-ar succeeded
+if [ $? -eq 0 ]; then
+  echo "Successfully created $output_archive with the following .o files:"
+  echo "$object_files"
+else
+  echo "Failed to create the archive."
+  exit 1
+fi
+
+# Copy all files from the external include directory to the new sysroot include directory
+cp -r "$include_source_dir"/* "$sysroot_dir/include/wasm32-wasi/"
+
+# Copy the crt1.o file into the new sysroot lib directory
+cp "$crt1_source_path" "$sysroot_dir/lib/wasm32-wasi/"
 ```
-Note that the header files should be pre-generated using `make install`. The crt1.o should be pre-compiled from this simple C file (see the WASM compile doc as well). The main job of this script is find every valid WASM `.o` file in the `build` directory, and group everything into `libc.a`, an `llvm-ar` arvhive.
+Note that the header files should be pre-generated using `make install`. The crt1.o should be pre-compiled from this simple C file (see the WASM compile doc as well). The main job of this script is to change "include_source_dir"(path to target file), "crt1_source_path"(path to crt1.o), "lind_syscall_path"(path to lind_syscall.o), and "Pack all found .o files into a single .a archive"(path to llvm-ar) into your own path. crt1.o and lind_syscall.o are in "lind_syscall" directory in glibc.
+
+After modifying all the path talked on the above, try to run gen_sysroot.sh and see if it works
+```
+./gen_sysroot.sh
+```
 
 ```
 void _start() {
@@ -149,6 +199,8 @@ Here are some macros we need to twist:
 - `lind_syscall_path`: you also need to pre-compile `lind_syscall.o`, just like `crt1.o`, and the source file is under glibc/lind_syscall
 - `sysroot_dir`: path to generate the sysroot at
 - `output_archive`: the path to the generate the libc.a, should be align with `sysroot_dir`
+
+ 
 
 ## Running only the pre-processor
 
