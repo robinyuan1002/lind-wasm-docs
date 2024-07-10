@@ -1,4 +1,8 @@
+# Building safeposix-rust
+
 ## Setting environment
+
+We need to set environment with the following codes
 
 ```
 apt update
@@ -13,12 +17,21 @@ rustup default nightly
 
 ## Clone git repo
 
+Then we clone it to home directory
 ```
 cd home
-git clone https://github.com/Lind-Project/safeposix-rust.git
+git clone https://github.com/yzhang71/safeposix-rust.git
+```
+
+Switch branch to 3i-dev
+
+```
+git switch 3i-dev
 ```
 
 ## Build
+
+Compile and make sure there are librustposix.so
 
 ```
 cargo build
