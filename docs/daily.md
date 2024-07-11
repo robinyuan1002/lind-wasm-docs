@@ -1,5 +1,8 @@
 # Daily Progress Log
 
+## Thu 7/11/2024
+1. In WASI-libc, `crt1.o` will call `__libc_start_main`, which then calls `__init_libc`, and subsequently calls `__init_tls(aux)`.
+
 ## Wed 7/10/2024
 1. Helped Runbin with the document and merged several of his PRs.
 2. We are getting an error from `__nptl_tls_static_size_for_stack` because the variables `dl_tls_static_size` and `dl_tls_static_align` are not initialized.
