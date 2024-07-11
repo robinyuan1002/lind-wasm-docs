@@ -2,6 +2,34 @@
 
 ## Thu 7/11/2024
 1. In WASI-libc, `crt1.o` will call `__libc_start_main`, which then calls `__init_libc`, and subsequently calls `__init_tls(aux)`.
+2. I have re-implemented the crt1.c, and calling the function `__libc_start_main` in _start()
+3. The errors we have for now are:
+```
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __fini_array_end
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __fini_array_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __fini_array_end
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __fini_array_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __fini_array_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __fini_array_end
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __fini_array_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __fini_array_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __preinit_array_end
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __preinit_array_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __preinit_array_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __preinit_array_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __init_array_end
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __init_array_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __init_array_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __init_array_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(dl-support.o): undefined symbol: _dl_sysinfo_int80
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(dl-support.o): undefined symbol: __ehdr_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(dl-support.o): undefined symbol: __ehdr_start
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(dl-support.o): undefined symbol: __ehdr_start
+```
+4. wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __fini_array_end
+wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(libc-start.o): undefined symbol: __fini_array_start
+Learning from wasi-libc, above errors can be solved by initializing both extern void (*__fini_array_start []) (void) 0; and
+extern void (*__fini_array_end []) (void) 0; into 0 in /glibc/csu/libc-start.c::160
 
 ## Wed 7/10/2024
 1. Helped Runbin with the document and merged several of his PRs.
