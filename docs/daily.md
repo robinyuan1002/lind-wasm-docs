@@ -26,7 +26,7 @@ wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(dl-support.o): undefi
 wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(dl-support.o): undefined symbol: __ehdr_start
 wasm-ld: error: ../../glibc/sysroot/lib/wasm32-wasi/libc.a(dl-support.o): undefined symbol: __ehdr_start
 ```
-4. Learning from wasi-libc, some of the errors can be solved by initializing both extern void (*__fini_array_start []) (void) 0; and
+Learning from wasi-libc, some of the errors can be solved by initializing both extern void (*__fini_array_start []) (void) 0; and
 extern void (*__fini_array_end []) (void) 0; into 0 in /glibc/csu/libc-start.c::160
 
 
