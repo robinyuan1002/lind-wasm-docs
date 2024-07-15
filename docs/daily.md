@@ -1,5 +1,24 @@
 # Daily Progress Log
 
+## Mon 7/15/2024
+1. Helped Runbin with the documentation; most parts have been refined, and he is currently working on the last piece, which is running hello-world using our own glibc.
+2. I have modified crt1.c, and now we are able to call __libc_setup_tls and then init_static_tls before the main function, but still has errors. 
+3. Now working on debugging the errors of:
+```
+Caused by:
+    0: failed to invoke command default
+    1: error while executing at wasm backtrace:
+           0: 0x377a1 - <unknown>!_IO_doallocbuf
+           1: 0x3c8bc - <unknown>!_IO_new_file_overflow
+           2: 0x37114 - <unknown>!__overflow
+           3: 0x385fa - <unknown>!_IO_puts
+           4: 0xcc2a - <unknown>!__libc_setup_tls
+           5:  0x4d6 - <unknown>!_start
+           6: 0x3f79d - <unknown>!_start.command_export
+       note: using the `WASMTIME_BACKTRACE_DETAILS=1` environment variable may show more debugging information
+    2: wasm trap: uninitialized element
+```
+
 ## Thu 7/11/2024
 1. In WASI-libc, `crt1.o` will call `__libc_start_main`, which then calls `__init_libc`, and subsequently calls `__init_tls(aux)`.
 2. I have re-implemented the crt1.c, and calling the function `__libc_start_main` in _start()
