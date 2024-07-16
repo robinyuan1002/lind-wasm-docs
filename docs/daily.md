@@ -1,4 +1,32 @@
 # Daily Progress Log
+## Tue 7/16/2024
+1. Previously, we encountered the error of not initializing `dl_tls_static_size` and `dl_tls_static_align`. After discussing with Professor Cappos and Nick, the solution was to call TLS initialization before the main function (in `crt1.c`). After checking the source code and testing, I now know that we should call `__libc_setup_tls`, which will then call `init_static_tls`. Since `__libc_setup_tls` is a void function, we don't need to provide any arguments. 
+
+Using GDB to follow the execution path, I confirmed that the previous error has been resolved:
+```c
+int a = GLRO(dl_tls_static_size);
+int b = GLRO(dl_tls_static_align);
+(gdb) p a
+$1 = 2048
+(gdb) p b
+$2 = 64
+```
+Now, we need to move forward to address the error:
+```
+Caused by:
+    0: failed to invoke command default
+    1: error while executing at wasm backtrace:
+           0: 0x26e04 - <unknown>!__libc_message_impl
+           1: 0xd3af - <unknown>!__libc_assert_fail
+           2: 0x34b9d - <unknown>!allocate_stack
+           3: 0x33cff - <unknown>!__pthread_create_2_1
+           4:  0x599 - <unknown>!__original_main
+           5:  0x4ea - <unknown>!_start
+           6: 0x41d6f - <unknown>!_start.command_export
+       note: using the `WASMTIME_BACKTRACE_DETAILS=1` environment variable may show more debugging information
+    2: memory fault at wasm address 0x8dfb4000 in linear memory of size 0x30000
+    3: wasm trap: out of bounds memory access
+```
 
 ## Mon 7/15/2024
 1. Helped Runbin with the documentation; most parts have been refined, and he is currently working on the last piece, which is running hello-world using our own glibc.
