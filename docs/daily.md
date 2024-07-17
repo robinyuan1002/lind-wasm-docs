@@ -1,4 +1,10 @@
 # Daily Progress Log
+## Tue 7/17/2024
+1. Helped Runbin with Wasmtime and C to WebAssembly compilation.
+2. Figured out the assertion failure was due to `__default_pthread_attr` not being initialized, which happened because `__libc_start_main` was not called.
+3. Simply calling `__libc_start_main` is not working because it also initializes the `.fini_array`, which is a section in ELF binaries, and WebAssembly doesn't support that.
+4. Now we are trying to understand how WASI-libc handles this, and we will migrate that part of the implementation.
+
 ## Tue 7/16/2024
 1. Previously, we encountered the error of not initializing `dl_tls_static_size` and `dl_tls_static_align`. After discussing with Professor Cappos and Nick, the solution was to call TLS initialization before the main function (in `crt1.c`). After checking the source code and testing, I now know that we should call `__libc_setup_tls`, which will then call `init_static_tls`. Since `__libc_setup_tls` is a void function, we don't need to provide any arguments. 
 
