@@ -1,5 +1,10 @@
 # Daily Progress Log
-## Tue 7/17/2024
+
+## Thu 7/18/2024
+1. I am currently integrating the WASI-libc threading implementation into glibc and have migrated `__init_tls.c` into the `csu` directory and updated the Makefile accordingly.
+2. I am working on fixing the compilation issues.
+
+## Wed 7/17/2024
 1. Helped Runbin with Wasmtime and C to WebAssembly compilation.
 2. Figured out the assertion failure was due to `__default_pthread_attr` not being initialized, which happened because `__libc_start_main` was not called.
 3. Simply calling `__libc_start_main` is not working because it also initializes the `.fini_array`, which is a section in ELF binaries, and WebAssembly doesn't support that.
