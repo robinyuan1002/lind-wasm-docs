@@ -10,6 +10,7 @@ __init_tls.c:288:28: error: '__builtin_wasm_tls_base' needs target feature bulk-
         volatile void* tls_base = __builtin_wasm_tls_base();
 ```
 It seems like these two functions need to be enabled by the WebAssembly target feature in clang/llvm.
+
 2. The functions `__builtin_wasm_tls_align` and `__builtin_wasm_tls_base` are WebAssembly-specific built-in functions provided by LLVM to handle thread-local storage (TLS) in WebAssembly. These functions are part of the WebAssembly support in LLVM and Clang. After checking the Makefile of the WASI-libc implementation, I found that adding -mbulk-memory to the CFLAGS enables that feature, which fixed the issue mentioned abov
 
 ## Thu 7/18/2024
