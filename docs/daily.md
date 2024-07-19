@@ -1,5 +1,17 @@
 # Daily Progress Log
 
+## Fri 7/19/2024
+1. I am now integrating the WASI-libc threading implementation into glibc and have migrated __init_tls.c into the csu directory and updated the Makefile accordingly. After fixing many define and initialization issues, we are now facing these errors:
+```
+__init_tls.c:287:21: error: '__builtin_wasm_tls_align' needs target feature bulk-memory
+        size_t tls_align = __builtin_wasm_tls_align();
+                           ^
+__init_tls.c:288:28: error: '__builtin_wasm_tls_base' needs target feature bulk-memory
+        volatile void* tls_base = __builtin_wasm_tls_base();
+```
+It seems like these two functions need to be enabled by the WebAssembly target feature in clang/llvm.
+2. The functions `__builtin_wasm_tls_align` and `__builtin_wasm_tls_base` are WebAssembly-specific built-in functions provided by LLVM to handle thread-local storage (TLS) in WebAssembly. These functions are part of the WebAssembly support in LLVM and Clang. After checking the Makefile of the WASI-libc implementation, I found that adding -mbulk-memory to the CFLAGS enables that feature, which fixed the issue mentioned abov
+
 ## Thu 7/18/2024
 1. I am currently integrating the WASI-libc threading implementation into glibc and have migrated `__init_tls.c` into the `csu` directory and updated the Makefile accordingly.
 2. I am working on fixing the compilation issues.
