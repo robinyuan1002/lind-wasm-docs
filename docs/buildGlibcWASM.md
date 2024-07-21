@@ -11,6 +11,14 @@ docker pull ubuntu:22.04
 docker run -it ubuntu
 ```
 
+Update apt and apt-get 
+
+```
+cd home
+apt-get update
+apt update
+```
+
 We need glibc from lind-wasm, if you did it already then ignore it
 [https://github.com/Lind-Project/lind-wasm.git](https://github.com/Lind-Project/lind-wasm.git)
 
@@ -37,7 +45,7 @@ First we should install some apt essential
 apt install build-essential
 ```
 
-Second we need to compile wasm-sdk. Before this we need to access to wasm-sdk, you need to replace `cd wasi-sdk` to what your need 
+Second we need to compile wasi-sdk. Before this we need to access to wasi-sdk, you need to replace `cd wasi-sdk` to what your need 
 
 ```
 cd wasi-sdk
@@ -52,7 +60,7 @@ if terimal tells you, you don't have "make" or thing like that just use "apt-get
 apt-get install make
 ```
 
-Third switch branch which is related with github(cd to lind-wasm/glicb). Find out which branch you are on currently and switch to branch "main" 
+Third switch branch which is related with github(cd to lind-wasm/glibc). Find out which branch you are on currently and switch to branch "main" 
 
 ```
 git branch -a
