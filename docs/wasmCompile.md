@@ -11,7 +11,7 @@
 Download `clang-16` from this link
 
 ```
-https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
 ```
 
 Unzip clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
