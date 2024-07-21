@@ -1,5 +1,57 @@
 # Daily Progress Log
 
+## Fri 7/19/2024
+1. I am now integrating the WASI-libc threading implementation into glibc and have migrated __init_tls.c into the csu directory and updated the Makefile accordingly. After fixing many define and initialization issues, we are now facing these errors:
+```
+__init_tls.c:287:21: error: '__builtin_wasm_tls_align' needs target feature bulk-memory
+        size_t tls_align = __builtin_wasm_tls_align();
+                           ^
+__init_tls.c:288:28: error: '__builtin_wasm_tls_base' needs target feature bulk-memory
+        volatile void* tls_base = __builtin_wasm_tls_base();
+```
+It seems like these two functions need to be enabled by the WebAssembly target feature in clang/llvm.
+
+2. The functions `__builtin_wasm_tls_align` and `__builtin_wasm_tls_base` are WebAssembly-specific built-in functions provided by LLVM to handle thread-local storage (TLS) in WebAssembly. These functions are part of the WebAssembly support in LLVM and Clang. After checking the Makefile of the WASI-libc implementation, I found that adding -mbulk-memory to the CFLAGS enables that feature, which fixed the issue mentioned abov
+
+## Thu 7/18/2024
+1. I am currently integrating the WASI-libc threading implementation into glibc and have migrated `__init_tls.c` into the `csu` directory and updated the Makefile accordingly.
+2. I am working on fixing the compilation issues.
+
+## Wed 7/17/2024
+1. Helped Runbin with Wasmtime and C to WebAssembly compilation.
+2. Figured out the assertion failure was due to `__default_pthread_attr` not being initialized, which happened because `__libc_start_main` was not called.
+3. Simply calling `__libc_start_main` is not working because it also initializes the `.fini_array`, which is a section in ELF binaries, and WebAssembly doesn't support that.
+4. Now we are trying to understand how WASI-libc handles this, and we will migrate that part of the implementation.
+
+## Tue 7/16/2024
+1. Previously, we encountered the error of not initializing `dl_tls_static_size` and `dl_tls_static_align`. After discussing with Professor Cappos and Nick, the solution was to call TLS initialization before the main function (in `crt1.c`). After checking the source code and testing, I now know that we should call `__libc_setup_tls`, which will then call `init_static_tls`. Since `__libc_setup_tls` is a void function, we don't need to provide any arguments. 
+
+Using GDB to follow the execution path, I confirmed that the previous error has been resolved:
+```c
+int a = GLRO(dl_tls_static_size);
+int b = GLRO(dl_tls_static_align);
+(gdb) p a
+$1 = 2048
+(gdb) p b
+$2 = 64
+```
+Now, we need to move forward to address the error:
+```
+Caused by:
+    0: failed to invoke command default
+    1: error while executing at wasm backtrace:
+           0: 0x26e04 - <unknown>!__libc_message_impl
+           1: 0xd3af - <unknown>!__libc_assert_fail
+           2: 0x34b9d - <unknown>!allocate_stack
+           3: 0x33cff - <unknown>!__pthread_create_2_1
+           4:  0x599 - <unknown>!__original_main
+           5:  0x4ea - <unknown>!_start
+           6: 0x41d6f - <unknown>!_start.command_export
+       note: using the `WASMTIME_BACKTRACE_DETAILS=1` environment variable may show more debugging information
+    2: memory fault at wasm address 0x8dfb4000 in linear memory of size 0x30000
+    3: wasm trap: out of bounds memory access
+```
+
 ## Mon 7/15/2024
 1. Helped Runbin with the documentation; most parts have been refined, and he is currently working on the last piece, which is running hello-world using our own glibc.
 2. I have modified crt1.c, and now we are able to call __libc_setup_tls and then init_static_tls before the main function, but still has errors. 
