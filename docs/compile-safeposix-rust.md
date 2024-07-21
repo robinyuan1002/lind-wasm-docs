@@ -26,6 +26,7 @@ git clone https://github.com/yzhang71/safeposix-rust.git
 Switch branch to 3i-dev
 
 ```
+cd safeposix-rust
 git switch 3i-dev
 ```
 
