@@ -75,10 +75,10 @@ Unzip clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
 tar -xf clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
 ```
 
-We move `libclang_rt.builtins-wasm32.a` from `lind-wasm/glibc/wasi` to `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib/` using
+We move `libclang_rt.builtins-wasm32.a` from `/home/lind-wasm/glibc/wasi` to `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib/` using
 
 ```
-mv /home/glibc/wasi /home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib
+mv /home/lind-wasm/glibc/wasi /home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib
 ```
 
 ## Configure
