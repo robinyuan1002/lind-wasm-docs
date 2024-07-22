@@ -42,12 +42,6 @@ If any error said "permission denied" then just add "sudo" at the front of the c
 
 If you want to edit file through terminal, try to search vim and study how to use it.
 
-## Frequently Used Flags
-- `--target=wasm32-unkown-wasi` for compiling to wasm
-- `-c` for compiling as a library without main executable
-- `-pthread` then the compiler to understand `__tls_base` etc
-- `--sysroot` specifying the stand library path
-
 ## Two ways to install complier
 1. Git clone wasi-sdk and use the `clang-18` in wasi-sdk, you need to compile wasi-sdk before using it(I recommend using this way, and I will use clang-18 as example for explanation)
 2. Download `clang-16` and add some file
