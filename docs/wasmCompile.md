@@ -25,10 +25,10 @@ Modify the file `stubs.h` located in `lind-wasm/glibc/target/include/gnu` to
 ```
 
 ## Compile C to wasm
-If you don't need to use glibc, modify `add.c` to the c file you want to compile and `add.wasm` is the wasm file you get(you can modify add to the name you want). Modify `/home/wasi-sdk/build/install/bin/clang-18` to you compiler's path
+If you don't need to use glibc, modify `add.c` to the c file you want to compile and `add.wasm` is the wasm file you get(you can modify add to the name you want). Modify `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang` to you compiler's path
 
 ```
-/home/wasi-sdk/build/install/bin/clang-18 --target=wasm32 -nostdlib -Wl,--no-entry -Wl,--export-all -o add.wasm add.c
+/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang --target=wasm32 -nostdlib -Wl,--no-entry -Wl,--export-all -o add.wasm add.c
 ```
 
 If you need to use glibc(such as printf, printf.c is located in lind-wasm/lind-wasm-tests), modify `printf.c` to the c file you want to compile and `printf.wasm` is the wasm file you get(you can modify printf to the name you want). Modify `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang-16` to you compiler's path
