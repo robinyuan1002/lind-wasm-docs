@@ -20,6 +20,7 @@ apt update
 ```
 
 we should install some apt essential
+
 ```
 apt install build-essential
 ```
@@ -34,6 +35,7 @@ Also strongly recommend to install `wasm-objdump` from the `wabt` toolkit
 [https://github.com/WebAssembly/wabt](https://github.com/WebAssembly/wabt)
 
 If you want to download files from github to server use `git clone` and `recurse-submodules`deal with repositories that contain submodules
+
 ```
 git clone --recurse-submodules
 ```
@@ -43,26 +45,11 @@ If any error said "permission denied" then just add "sudo" at the front of the c
 If you want to edit file through terminal, try to search vim and study how to use it.
 
 ## Two ways to install complier
-1. Git clone wasi-sdk and use the `clang-18` in wasi-sdk, you need to compile wasi-sdk before using it(I recommend using this way, and I will use clang-18 as example for explanation)
-2. Download `clang-16` and add some file
+1. Download `clang-16` and add some file(I recommend using this way, and I will use clang-16 as example for explanation)
+2. Git clone wasi-sdk and use the `clang-18` in wasi-sdk, you need to compile wasi-sdk before using it
 
-### Compile wasi-sdk(recommended way)
-I assume you already git clone wasi-sdk, now you need to cd to wasi-sdk and run these code
 
-```
-cmake -G Ninja -B build/toolchain -S . -DWASI_SDK_BUILD_TOOLCHAIN=ON -DCMAKE_INSTALL_PREFIX=build/install
-
-cmake --build build/toolchain --target install
-
-cmake -G Ninja -B build/sysroot -S . \
-    -DCMAKE_INSTALL_PREFIX=build/install \
-    -DCMAKE_TOOLCHAIN_FILE=build/install/share/cmake/wasi-sdk.cmake \
-    -DCMAKE_C_COMPILER_WORKS=ON \
-    -DCMAKE_CXX_COMPILER_WORKS=ON
-cmake --build build/sysroot --target install
-```
-
-### Install clang-16(if you are done compiling wasi-sdk ignore it)
+### Install clang-16(recommended way)
 Download `clang-16` from this link
 
 ```
@@ -81,8 +68,23 @@ We move `libclang_rt.builtins-wasm32.a` from `/home/lind-wasm/glibc/wasi` to `/h
 mv /home/lind-wasm/glibc/wasi /home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib
 ```
 
-## Configure
+### Compile wasi-sdk(not available now)
+I assume you already git clone wasi-sdk, now you need to cd to wasi-sdk and run these code
 
+```
+cmake -G Ninja -B build/toolchain -S . -DWASI_SDK_BUILD_TOOLCHAIN=ON -DCMAKE_INSTALL_PREFIX=build/install
+
+cmake --build build/toolchain --target install
+
+cmake -G Ninja -B build/sysroot -S . \
+    -DCMAKE_INSTALL_PREFIX=build/install \
+    -DCMAKE_TOOLCHAIN_FILE=build/install/share/cmake/wasi-sdk.cmake \
+    -DCMAKE_C_COMPILER_WORKS=ON \
+    -DCMAKE_CXX_COMPILER_WORKS=ON
+cmake --build build/sysroot --target install
+```
+
+## Configure
 Switch branch of glibc(cd to lind-wasm/glibc). Find out which branch you are on currently and switch to branch "main" 
 
 ```
@@ -112,10 +114,10 @@ mkdir -p $BUILDDIR
 cd $BUILDDIR
 ../configure --disable-werror --disable-hidden-plt --with-headers=/usr/i686-linux-gnu/include --prefix=/home/lind-wasm/glibc/target --host=i686-linux-gnu --build=i686-linux-gnu\
     CFLAGS=" -O2 -g" \
-    CC="/home/wasi-sdk/build/install/bin/clang-18 --target=wasm32-unkown-wasi -v -Wno-int-conversion"
+    CC="/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang-16 --target=wasm32-unkown-wasi -v -Wno-int-conversion"
 ```
 
-You should replace `CC` to the path to your `clang`, this path should work but if not change this part `/home/wasi-sdk/build/install/bin/clang-18` into your own path. If you define `BUILDDIR=build`, then the compiled WASM object files will appear under `glibc/build`.
+You should replace `CC` to the path to your `clang`, this path should work but if not change this part `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang-16` into your own path. If you define `BUILDDIR=build`, then the compiled WASM object files will appear under `glibc/build`.
 Be aware that you should make sure this build directory is empty before running config script, so you need to `rm -rf build` to remove all the things inside build directory before recompiling it.
 
 A crutial job of the configure script is deciding which sysdeps directories to use according to the `host` and `build` string.
@@ -197,7 +199,7 @@ fi
 mkdir -p "$sysroot_dir/include/wasm32-wasi" "$sysroot_dir/lib/wasm32-wasi"
 
 # Pack all found .o files into a single .a archive
-/home/wasi-sdk/build/install/bin/llvm-ar rcs "$output_archive" $object_files
+/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/llvm-ar rcs "$output_archive" $object_files
 
 # Check if llvm-ar succeeded
 if [ $? -eq 0 ]; then
