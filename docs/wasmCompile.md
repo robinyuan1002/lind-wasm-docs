@@ -1,31 +1,10 @@
-## Compiler version
-`clang-16` and `clang-18` can be use, if you use other version make sure it works. I will use `clang-16` as an example.
-
 ## Frequently Used Flags
 - `--target=wasm32-unkown-wasi` for compiling to wasm
 - `-c` for compiling as a library without main executable
 - `-pthread` then the compiler to understand `__tls_base` etc
 - `--sysroot` specifying the stand library path
 
-## Install clang-16
-Download `clang-16` from this link
-
-```
-https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
-```
-
-Unzip clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
-
-```
-tar -xf clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
-```
-
-We move `libclang_rt.builtins-wasm32.a` from `lind-wasm/glibc/wasi` to `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib/` using
-
-```
-mv /home/glibc/wasi /home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib
-```
-
+## Modify stubs.h
 Modify the file `stubs.h` located in `lind-wasm/glibc/target/include/gnu` to
 
 ```
@@ -46,10 +25,10 @@ Modify the file `stubs.h` located in `lind-wasm/glibc/target/include/gnu` to
 ```
 
 ## Compile C to wasm
-If you don't need to use glibc, modify `add.c` to the c file you want to compile and `add.wasm` is the wasm file you get(you can modify add to the name you want). Modify `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang-16` to you compiler's path
+If you don't need to use glibc, modify `add.c` to the c file you want to compile and `add.wasm` is the wasm file you get(you can modify add to the name you want). Modify `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang` to you compiler's path
 
 ```
-/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang-16 --target=wasm32 -nostdlib -Wl,--no-entry -Wl,--export-all -o add.wasm add.c
+/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang --target=wasm32 -nostdlib -Wl,--no-entry -Wl,--export-all -o add.wasm add.c
 ```
 
 If you need to use glibc(such as printf, printf.c is located in lind-wasm/lind-wasm-tests), modify `printf.c` to the c file you want to compile and `printf.wasm` is the wasm file you get(you can modify printf to the name you want). Modify `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang-16` to you compiler's path
@@ -58,6 +37,8 @@ If you need to use glibc(such as printf, printf.c is located in lind-wasm/lind-w
 /home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang --target=wasm32-unknown-wasi --sysroot /home/lind-wasm/glibc/sysroot printf.c -g -O0 -o printf.wasm
 ```
 
+You should get printf.wasm after compiling printf.c
+
 ## Run wasmtime
 Run the `.wasm` file, modify the wasmtime path to your own
 
@@ -65,4 +46,4 @@ Run the `.wasm` file, modify the wasmtime path to your own
 /home/lind-wasm/wasmtime/target/debug/wasmtime add.wasm
 ```
 
-For printf.c, you should get `Hello World!`.
+For printf.wasm, you should get `Hello World!`.

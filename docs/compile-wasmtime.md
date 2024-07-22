@@ -14,7 +14,7 @@ git submodule update --init
 switch branch to add-lind
 
 ```
-switch to add-lind
+git switch add-lind
 ```
 
 ### The Rust Toolchain

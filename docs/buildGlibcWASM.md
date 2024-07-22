@@ -19,6 +19,12 @@ apt-get update
 apt update
 ```
 
+we should install some apt essential
+
+```
+apt install build-essential
+```
+
 We need glibc from lind-wasm, if you did it already then ignore it
 [https://github.com/Lind-Project/lind-wasm.git](https://github.com/Lind-Project/lind-wasm.git)
 
@@ -28,7 +34,8 @@ We need WASM compatible `clang` and `ar`, which can be built locally from `wasi-
 Also strongly recommend to install `wasm-objdump` from the `wabt` toolkit
 [https://github.com/WebAssembly/wabt](https://github.com/WebAssembly/wabt)
 
-if you want to download files from github to server use `git clone` and `recurse-submodules`deal with repositories that contain submodules
+If you want to download files from github to server use `git clone` and `recurse-submodules`deal with repositories that contain submodules
+
 ```
 git clone --recurse-submodules
 ```
@@ -37,41 +44,60 @@ If any error said "permission denied" then just add "sudo" at the front of the c
 
 If you want to edit file through terminal, try to search vim and study how to use it.
 
+## Two ways to install complier
+1. Download `clang-16` and add some file(I recommend using this way, and I will use clang-16 as example for explanation)
+2. Git clone wasi-sdk and use the `clang-18` in wasi-sdk, you need to compile wasi-sdk before using it
+
+
+### Install clang-16(recommended way)
+Download `clang-16` from this link
+
+```
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
+```
+
+Unzip clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
+
+```
+tar -xf clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
+```
+
+We move `libclang_rt.builtins-wasm32.a` from `/home/lind-wasm/glibc/wasi` to `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib/` using
+
+```
+mv /home/lind-wasm/glibc/wasi /home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib
+```
+
+### Compile wasi-sdk(not available now)
+I assume you already git clone wasi-sdk, now you need to cd to wasi-sdk and run these code
+
+```
+cmake -G Ninja -B build/toolchain -S . -DWASI_SDK_BUILD_TOOLCHAIN=ON -DCMAKE_INSTALL_PREFIX=build/install
+
+cmake --build build/toolchain --target install
+
+cmake -G Ninja -B build/sysroot -S . \
+    -DCMAKE_INSTALL_PREFIX=build/install \
+    -DCMAKE_TOOLCHAIN_FILE=build/install/share/cmake/wasi-sdk.cmake \
+    -DCMAKE_C_COMPILER_WORKS=ON \
+    -DCMAKE_CXX_COMPILER_WORKS=ON
+cmake --build build/sysroot --target install
+```
+
 ## Configure
-
-First we should install some apt essential
-
-```
-apt install build-essential
-```
-
-Second we need to compile wasi-sdk. Before this we need to access to wasi-sdk, you need to replace `cd wasi-sdk` to what your need 
-
-```
-cd wasi-sdk
-NINJA_FLAGS=-v make -j8 package
-```
-
--j8 means we are using 8 core, you can change the number. But normally 8 core is enough.
-
-if terimal tells you, you don't have "make" or thing like that just use "apt-get install...". This is an example
-
-```
-apt-get install make
-```
-
-Third switch branch which is related with github(cd to lind-wasm/glibc). Find out which branch you are on currently and switch to branch "main" 
+Switch branch of glibc(cd to lind-wasm/glibc). Find out which branch you are on currently and switch to branch "main" 
 
 ```
 git branch -a
 git switch main 
 ```
 
-For step four, we create a .sh file and write a config script in the file. We use `nano` to create file in the glibc root directory(glibc is in the lind-wasm directory) and you can change `anyname` into the filename you want
+Then, we create a .sh file and write a config script in the file. We use `nano` to create file in the glibc root directory(glibc is in the lind-wasm directory) and you can change `anyname` into the filename you want
 
 ```
 nano anyname.sh
 ```
+
 before writing the script we need to install gcc-i686
 
 ```
@@ -88,11 +114,11 @@ mkdir -p $BUILDDIR
 cd $BUILDDIR
 ../configure --disable-werror --disable-hidden-plt --with-headers=/usr/i686-linux-gnu/include --prefix=/home/lind-wasm/glibc/target --host=i686-linux-gnu --build=i686-linux-gnu\
     CFLAGS=" -O2 -g" \
-    CC="/home/wasi-sdk/build/llvm/bin/clang-18 --target=wasm32-unkown-wasi -v -Wno-int-conversion"
+    CC="/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang-16 --target=wasm32-unkown-wasi -v -Wno-int-conversion"
 ```
 
-You should replace `CC` to the path to your `clang`, this path should work but if not change this part (/home/wasi-sdk/build/llvm/bin/clang-18) into your own path. If you define `BUILDDIR=build`, then the compiled WASM object files will appear under `glibc/build`.
-Be aware that you should make sure this build directory is empty before running config script, so you need to `rm -rf build` before recompiling it.
+You should replace `CC` to the path to your `clang`, this path should work but if not change this part `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang-16` into your own path. If you define `BUILDDIR=build`, then the compiled WASM object files will appear under `glibc/build`.
+Be aware that you should make sure this build directory is empty before running config script, so you need to `rm -rf build` to remove all the things inside build directory before recompiling it.
 
 A crutial job of the configure script is deciding which sysdeps directories to use according to the `host` and `build` string.
 We already changed the configure script in glibc root directory, and the lind add-on directories are already baked to be included.
@@ -112,17 +138,20 @@ The compiler flags we need:
 - `--target=wasm32-unkown-wasi`: this tells the compiler we want to compile to WASM
 
 Now the last step is to run the .sh file
+
 ```
 sudo chmod +x anyname.sh 
 ./anyname.sh
 ```
 
 After config succeed, you will see these in the `build` directory,
+
 ```
 Makefile  bits  config.h  config.log  config.make  config.status
 ```
+
 ## Installing glibc
-Before we start compiling to object files we need to install the glibc we complied to the prefix in the .sh file. For example, mine will install into "target". This is the install command line we need to use
+Before we start compiling to object files we need to install the glibc we complied to the prefix in the .sh file. For example, mine will install into `target`. This is the install command line we need to use
 
 ```
 make install --keep-going
@@ -170,7 +199,7 @@ fi
 mkdir -p "$sysroot_dir/include/wasm32-wasi" "$sysroot_dir/lib/wasm32-wasi"
 
 # Pack all found .o files into a single .a archive
-/home/wasi-sdk/build/llvm/bin/llvm-ar rcs "$output_archive" $object_files
+/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/llvm-ar rcs "$output_archive" $object_files
 
 # Check if llvm-ar succeeded
 if [ $? -eq 0 ]; then
