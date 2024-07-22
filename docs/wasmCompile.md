@@ -1,31 +1,10 @@
-## Compiler version
-`clang-16` and `clang-18` can be use, if you use other version make sure it works. I will use `clang-16` as an example.
-
 ## Frequently Used Flags
 - `--target=wasm32-unkown-wasi` for compiling to wasm
 - `-c` for compiling as a library without main executable
 - `-pthread` then the compiler to understand `__tls_base` etc
 - `--sysroot` specifying the stand library path
 
-## Install clang-16
-Download `clang-16` from this link
-
-```
-wget https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.4/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
-```
-
-Unzip clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
-
-```
-tar -xf clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
-```
-
-We move `libclang_rt.builtins-wasm32.a` from `lind-wasm/glibc/wasi` to `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib/` using
-
-```
-mv /home/glibc/wasi /home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib
-```
-
+## Modify stubs.h
 Modify the file `stubs.h` located in `lind-wasm/glibc/target/include/gnu` to
 
 ```
@@ -58,6 +37,8 @@ If you need to use glibc(such as printf, printf.c is located in lind-wasm/lind-w
 /home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/bin/clang --target=wasm32-unknown-wasi --sysroot /home/lind-wasm/glibc/sysroot printf.c -g -O0 -o printf.wasm
 ```
 
+You should get printf.wasm after compiling printf.c
+
 ## Run wasmtime
 Run the `.wasm` file, modify the wasmtime path to your own
 
@@ -65,4 +46,4 @@ Run the `.wasm` file, modify the wasmtime path to your own
 /home/lind-wasm/wasmtime/target/debug/wasmtime add.wasm
 ```
 
-For printf.c, you should get `Hello World!`.
+For printf.wasm, you should get `Hello World!`.
