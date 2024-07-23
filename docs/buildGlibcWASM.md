@@ -100,6 +100,7 @@ cmake --build build/sysroot --target install
 We create a .sh file and write a config script in the file. We use `nano` to create file in the glibc root directory(glibc is in the lind-wasm directory) and you can change `anyname` into the filename you want
 
 ```
+cd /home/lind-wasm/glibc
 nano anyname.sh
 ```
 
