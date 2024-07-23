@@ -27,6 +27,11 @@ The `wasmtime-fuzzing` crate transitively depends on `bindgen`, which requires `
 ## Building the Wasmtime CLI
 Change the path in `lind-wasm/wasmtime/crates/rustposix/src/build.rs` "cargo:rustc-link-search=native=" to the location of "librustposix.so"
 
+```
+cd /home/lind-wasm/wasmtime/crates/rustposix/src
+cd /home/lind-wasm/wasmtime
+```
+
 Remember to export
 
 ```
