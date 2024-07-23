@@ -27,6 +27,9 @@ apt install git
 apt install wget
 apt install gcc-i686-linux-gnu g++-i686-linux-gnu
 apt install nano
+apt install bison
+apt install gawk
+apt install python3
 ```
 
 We need glibc from lind-wasm, if you did it already then ignore it
