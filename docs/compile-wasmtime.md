@@ -8,6 +8,7 @@ Just be aware Wasmtime is in the lind-wasm directory.
 ### Git Submodules
 The Wasmtime repository contains a number of git submodules. To build Wasmtime and most other crates in the repository, ensure that these are initialized with the following command:
 ```sh
+cd /home/lind-wasm/wasmtime
 git submodule update --init
 ```
 ### Switch branch
