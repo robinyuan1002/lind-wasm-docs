@@ -23,6 +23,9 @@ we should install some apt essential
 
 ```
 apt install build-essential
+apt install git
+apt install wget
+apt install gcc-i686-linux-gnu g++-i686-linux-gnu
 ```
 
 We need glibc from lind-wasm, if you did it already then ignore it
@@ -98,12 +101,6 @@ We create a .sh file and write a config script in the file. We use `nano` to cre
 
 ```
 nano anyname.sh
-```
-
-before writing the script we need to install gcc-i686
-
-```
-apt install gcc-i686-linux-gnu g++-i686-linux-gnu
 ```
 
 then we write the script like this
