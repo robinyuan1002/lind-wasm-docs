@@ -29,7 +29,8 @@ apt install gcc-i686-linux-gnu g++-i686-linux-gnu
 apt install nano
 apt install bison
 apt install gawk
-apt install python3
+apt install vim
+apt install python3 (2.America 105.New York)
 ```
 
 We need glibc from lind-wasm, if you did it already then ignore it
@@ -158,6 +159,7 @@ Makefile  bits  config.h  config.log  config.make  config.status
 Before we start compiling to object files we need to install the glibc we complied to the prefix in the .sh file. For example, mine will install into `target`. This is the install command line we need to use
 
 ```
+cd build
 make install --keep-going
 ```
 
@@ -166,6 +168,11 @@ make install --keep-going
 In the build directory, usually we use `make --keep-going -j$(nproc)`. The first flag is to continue compiling after errors, we need this cuz there are too many errors now (mainly due to assembly about threading). The `-j` is important to speed it up, but also makes the compilation log interleaved. The compilation log is **VERY IMPORTANT**, which tells why a given c file failed to be compiled. So sometimes we don't want the `-j`. Also, we can copy the actual compiler command in the compile log. For such commands, if we want to compile a single C file, only the source file path need to be further specified. We can use this to test compiling a specific file.
 
 ## Generating WASM sysroot
+Back to glibc
+
+```
+cd ..
+```
 
 This is an example for `gen_sysroot.sh`
 
@@ -233,6 +240,7 @@ Note that the header files should be pre-generated using `make install`. The crt
 
 After modifying all the path talked on the above, try to run `gen_sysroot.sh` and see if it works
 ```
+chmod +x gen_sysroot.sh
 ./gen_sysroot.sh
 ```
 
