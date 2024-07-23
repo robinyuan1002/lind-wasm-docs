@@ -36,7 +36,7 @@ export LD_LIBRARY_PATH=/home/lind-wasm/wasmtime/crates/rustposix:$LD_LIBRARY_PAT
 You should find librustposix.so in rustposix(...wasmtime/crates/rustposix), but instead we should replace librustposix.so with another librustposix.so located in the safeposix-rust you complied before. Use the code below, you can change `librustposix.so` with the name of the file you want to replace and change `/home/lind-wasm/wasmtime/crates/rustposix` with the path of the new file(for file use cp for directory use cp -r )
 
 ```
-cp librustposix.so /home/lind-wasm/wasmtime/crates/rustposix
+cp /home/safeposix-rust/target/debug/librustposix.so /home/lind-wasm/wasmtime/crates/rustposix
 ```
 
 To make an unoptimized, debug build of the Wasmtime CLI tool, go to the root of the repository and run:
