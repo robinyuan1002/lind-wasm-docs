@@ -26,6 +26,7 @@ apt install build-essential
 apt install git
 apt install wget
 apt install gcc-i686-linux-gnu g++-i686-linux-gnu
+apt install nano
 ```
 
 We need glibc from lind-wasm, if you did it already then ignore it
