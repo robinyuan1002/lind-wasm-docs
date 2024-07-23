@@ -62,9 +62,18 @@ Unzip clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
 tar -xf clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04.tar.xz
 ```
 
+Switch branch of glibc(cd to lind-wasm/glibc). Find out which branch you are on currently and switch to branch "main" 
+
+```
+cd /home/lind-wasm/glibc
+git branch -a
+git switch main 
+```
+
 We move `libclang_rt.builtins-wasm32.a` from `/home/lind-wasm/glibc/wasi` to `/home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib/` using
 
 ```
+cd /home
 mv /home/lind-wasm/glibc/wasi /home/clang+llvm-16.0.4-x86_64-linux-gnu-ubuntu-22.04/lib/clang/16/lib
 ```
 
@@ -85,14 +94,7 @@ cmake --build build/sysroot --target install
 ```
 
 ## Configure
-Switch branch of glibc(cd to lind-wasm/glibc). Find out which branch you are on currently and switch to branch "main" 
-
-```
-git branch -a
-git switch main 
-```
-
-Then, we create a .sh file and write a config script in the file. We use `nano` to create file in the glibc root directory(glibc is in the lind-wasm directory) and you can change `anyname` into the filename you want
+We create a .sh file and write a config script in the file. We use `nano` to create file in the glibc root directory(glibc is in the lind-wasm directory) and you can change `anyname` into the filename you want
 
 ```
 nano anyname.sh
